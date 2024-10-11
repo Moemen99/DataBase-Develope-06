@@ -103,3 +103,81 @@ The `DeptID` in the Employee table is a foreign key referencing the `ID` in the 
 ## Conclusion
 
 Cross joins are a powerful tool in SQL, but they should be used carefully. They are particularly useful for generating test data or in specific business scenarios where you need to combine all possibilities from two sets. However, in most real-world database operations, other types of joins (like inner joins or outer joins) are more commonly used to relate data between tables based on specific conditions.
+
+
+
+# SQL Joins: Understanding Inner Join (Equi Join)
+
+## 2. Inner Join (Equi Join)
+
+The second type of join is known as "Equi Join" in ANSI SQL terminology, but Microsoft SQL Server refers to it as "Inner Join". This join type is crucial for combining related data from multiple tables based on matching column values.
+
+## Syntax and Examples
+
+### Old ANSI Syntax
+
+```sql
+SELECT E.Name, D.Name 
+FROM Employees E, Department D
+WHERE D.ID = E.DeptID
+```
+
+### Modern SQL Syntax (Microsoft)
+
+```sql
+SELECT E.Name, D.Name 
+FROM Employees E INNER JOIN Department D
+ON D.ID = E.DeptID
+```
+
+## Key Points
+
+- Inner Join returns only the rows where there is a match in both tables based on the join condition.
+- It gives us the employees that participate in the relationship, i.e., employees that are actually assigned to departments.
+- The join condition is specified using the `WHERE` clause in the old syntax and the `ON` clause in the modern syntax.
+
+## Example Result
+
+| E.Name | D.Name |
+|:------:|:------:|
+| Ahmed  | Sales  |
+| Aya    | Sales  |
+| Ali    | IS     |
+
+## Visual Representation
+
+```
++-------------------+        +-------------------+
+|     Employee      |        |    Department     |
++-------------------+        +-------------------+
+| ID   | Name  | DeptID |    | ID | Name         |
++------+-------+--------+    +----+--------------+
+| 1    | Ahmed | 10     |    | 10 | Sales        |
+| 2    | Aya   | 10     |    | 20 | IS           |
+| 3    | Ali   | 20     |    | 30 | HR           |
+| 4    | Osama | NULL   |    | 40 | Admin        |
++------+-------+--------+    +----+--------------+
+           |                          |
+           |  INNER JOIN ON           |
+           |  E.DeptID = D.ID         |
+           +--------------------------+
+```
+
+## Important Notes
+
+1. The Inner Join only returns rows where there is a match in both tables. In this example, Osama would not appear in the result set because his DeptID is NULL.
+2. The join condition (E.DeptID = D.ID) ensures that only related records are combined.
+3. This type of join is particularly useful when you want to retrieve data that has valid relationships across tables, eliminating any unmatched records.
+
+## Comparison with Cross Join
+
+Unlike a Cross Join, which produces a Cartesian product of all rows from both tables, an Inner Join only combines rows that satisfy the join condition. This results in a more focused and usually more meaningful result set.
+
+## Use Cases
+
+Inner Joins are commonly used in scenarios where you need to:
+1. Retrieve related data from multiple tables
+2. Ensure data integrity by only working with matched records
+3. Combine information while filtering out unrelated or incomplete data
+
+Remember, the choice between different join types depends on your specific data requirements and the relationships between your tables.
