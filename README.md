@@ -277,3 +277,76 @@ This join returns all employees and all departments, regardless of whether they 
 - Full Outer Join: When you need to see all records from both tables, highlighting where relationships exist and where they don't (e.g., a complete view of employees and departments, showing unassigned employees and empty departments).
 
 Understanding these join types allows for flexible and comprehensive data retrieval in relational databases, catering to various analytical and reporting needs.
+
+
+
+
+# Database Backup and Restore Process
+
+This guide outlines the steps to backup a SQL Server database and restore it on another system.
+
+## Backing Up the Database
+
+1. **Open SQL Server Management Studio (SSMS)**
+   - Connect to your database server
+
+2. **Locate the Database**
+   - In the Object Explorer, find the database you want to backup (e.g., "ITI")
+
+3. **Initiate Backup**
+   - Right-click on the database name
+   - Select "Tasks" > "Back Up..."
+
+4. **Configure Backup Settings**
+   - In the popup window, set the following:
+     - **Backup type**: Choose "Full"
+     - **Destination**: Click "Add" to specify the backup file location
+     - **File name**: Enter a name for your backup file (use .bak extension)
+
+5. **Additional Options**
+   - You can add multiple backup destinations using the "Add" button
+   - Remove unwanted destinations with the "Remove" button
+
+6. **Execute Backup**
+   - Click "OK" to start the backup process
+
+7. **Verify Backup**
+   - Check the specified location for your .bak file
+
+## Restoring the Database
+
+1. **Prepare for Restore**
+   - Ensure you have the .bak file from the backup process
+
+2. **Open SQL Server Management Studio (SSMS)**
+   - Connect to the target database server
+
+3. **Initiate Restore Process**
+   - Right-click on the "Databases" folder in Object Explorer
+   - Select "Restore Database..."
+
+4. **Specify Backup Source**
+   - In the restore window, choose "Device" as the source
+   - Click the "..." button to browse for the backup file
+
+5. **Locate Backup File**
+   - In the "Select backup devices" dialog, click "Add"
+   - Browse to the location of your .bak file and select it
+   - Click "OK" to add the file
+
+6. **Configure Restore Options**
+   - Review and adjust restore options if necessary
+
+7. **Execute Restore**
+   - Click "OK" to start the database restoration process
+
+8. **Verify Restoration**
+   - Once complete, refresh the Databases folder in Object Explorer
+   - Confirm that the restored database appears and is accessible
+
+## Important Notes
+
+- Always ensure you have sufficient disk space for backups
+- Regular backups are crucial for data protection
+- Test your backup files periodically to ensure they can be successfully restored
+- Consider automating the backup process for critical databases
