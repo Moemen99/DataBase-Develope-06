@@ -350,3 +350,102 @@ This guide outlines the steps to backup a SQL Server database and restore it on 
 - Regular backups are crucial for data protection
 - Test your backup files periodically to ensure they can be successfully restored
 - Consider automating the backup process for critical databases
+
+
+
+
+
+# Understanding Self Joins in SQL
+
+A self join is a type of join where a table is joined with itself. This is particularly useful when dealing with hierarchical or self-referential data within a single table.
+
+## Why Use Self Joins?
+
+Self joins are commonly used when a table has a foreign key that references its own primary key. This scenario often occurs in situations like:
+
+- Employee-Manager relationships
+- Hierarchical data structures (e.g., comment threads, organizational charts)
+- Comparing rows within the same table
+
+## Example: Employee-Manager Relationship
+
+Let's consider an `Employees` table with the following structure:
+
+| Column     | Description                                  |
+|------------|----------------------------------------------|
+| Id         | Primary key                                  |
+| Name       | Employee name                                |
+| ManagerId  | Foreign key referencing the Id of the manager|
+
+Here's a visual representation of the table:
+
+```
++------------+
+|  Employees |
++------------+
+| Id         |
+| Name       |
+| ManagerId  |
++------------+
+      |
+      | (self-referential)
+      |
+```
+
+## The Self Join Query
+
+To retrieve both the employee's name and their manager's name, we can use a self join:
+
+```sql
+SELECT 
+    e.Name AS EmployeeName,
+    m.Name AS ManagerName
+FROM 
+    Employees e
+LEFT JOIN 
+    Employees m ON e.ManagerId = m.Id
+```
+
+This query works by:
+
+1. Treating the `Employees` table as two separate tables (aliased as `e` and `m`)
+2. Joining these "two" tables based on the `ManagerId` and `Id` relationship
+
+## Visualizing the Self Join
+
+Conceptually, we can think of this as splitting the table into two views:
+
+```
+Employees (e)        Managers (m)
++----+------+        +----+------+
+| Id | Name |        | Id | Name |
++----+------+        +----+------+
+|  1 | Aya  |   +--->|  1 | Ahmed|
+|  2 | Omar |   |    +----+------+
++----+------+   |
+     |          |
+     +----------+
+```
+
+The join connects employees to their managers using the `ManagerId` relationship.
+
+## Result of the Self Join
+
+The query result might look like this:
+
+| EmployeeName | ManagerName |
+|--------------|-------------|
+| Ahmed        | NULL        |
+| Aya          | Ahmed       |
+| Omar         | Ahmed       |
+
+This clearly shows the hierarchical relationship between employees and their managers within a single table.
+
+## Key Points to Remember
+
+- Self joins are useful for querying hierarchical data in a single table.
+- They involve treating a single table as if it were two separate tables.
+- The `LEFT JOIN` ensures that employees without managers (like top-level managers) are included in the results.
+- Self joins can be extended to handle multiple levels of hierarchy if needed.
+
+By using self joins, you can efficiently query and analyze complex relationships within a single table structure.
