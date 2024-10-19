@@ -520,3 +520,74 @@ ON Supers.St_Id = Stds.St_super
 ## Advanced Usage
 
 For more complex hierarchies or to query multiple levels of supervision, consider using recursive Common Table Expressions (CTEs) in SQL Server.
+
+
+
+
+
+# Multiple Table Joins in SQL Server: Student-Course Example
+
+## Understanding Multiple Table Joins
+
+Multiple table joins are used when we need to combine data from more than two tables. This is common in relational databases where data is normalized across multiple tables.
+
+## The Tables
+
+We have three tables in this example:
+
+1. **Student** table
+   - Contains student information (St_Id, St_Fname, etc.)
+
+2. **Course** table
+   - Contains course information (Crs_Id, Crs_Name, etc.)
+
+3. **Stud_Course** table
+   - Represents the many-to-many relationship between students and courses
+   - Contains St_Id (foreign key to Student), Crs_Id (foreign key to Course), and Grade
+
+## Relationship Structure
+
+- The relationship between Student and Course is many-to-many.
+- This is implemented using the Stud_Course table, which creates two one-to-many relationships:
+  1. Student to Stud_Course (one-to-many)
+  2. Course to Stud_Course (one-to-many)
+
+## Multiple Table Join Queries
+
+### 1. Using ANSI Syntax (Equi Join)
+
+```sql
+SELECT S.St_Fname, C.Crs_Name, SC.Grade
+FROM Student S, Stud_Course SC, Course C
+WHERE S.St_Id = SC.St_Id AND C.Crs_Id = SC.Crs_Id
+```
+
+### 2. Using Microsoft Syntax (Inner Join)
+
+```sql
+SELECT S.St_Fname, C.Crs_Name, SC.Grade
+FROM Student S
+INNER JOIN Stud_Course SC ON S.St_Id = SC.St_Id
+INNER JOIN Course C ON C.Crs_Id = SC.Crs_Id
+```
+
+## Key Points
+
+1. The joins connect the Student and Course tables through the Stud_Course table.
+2. We use the foreign key relationships to establish the connections between tables.
+3. The query retrieves the student name from the Student table, the course name from the Course table, and the grade from the Stud_Course table.
+4. Both ANSI and Microsoft syntax achieve the same result, but the Microsoft syntax (using INNER JOIN) is generally preferred for readability and maintainability.
+
+## Considerations
+
+- Ensure proper indexing on join columns (St_Id and Crs_Id) for better performance.
+- Consider using LEFT JOIN if you need to include students or courses that don't have any entries in the Stud_Course table.
+- Be mindful of the order of joins when dealing with large datasets, as it can affect query performance.
+
+## Advanced Usage
+
+For more complex queries, you might consider:
+- Using subqueries
+- Applying additional filtering conditions
+- Aggregating data (e.g., average grade per course)
+- Using Common Table Expressions (CTEs) for more readable, complex queries
