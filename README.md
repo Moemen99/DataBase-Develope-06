@@ -449,3 +449,74 @@ This clearly shows the hierarchical relationship between employees and their man
 - Self joins can be extended to handle multiple levels of hierarchy if needed.
 
 By using self joins, you can efficiently query and analyze complex relationships within a single table structure.
+
+
+
+# Self Joins in SQL Server: Student-Supervisor Example
+
+## Understanding Self Joins
+
+A self join is a SQL operation where a table is joined with itself. This is useful when a table contains a foreign key that references its own primary key, creating a hierarchical or self-referential structure within the data.
+
+## The Student Table
+
+Let's consider a `Student` table with the following structure:
+
+| Column     | Description                                        |
+|------------|----------------------------------------------------|
+| St_Id      | Primary key                                        |
+| St_Fname   | Student's first name                               |
+| St_Lname   | Student's last name                                |
+| St_Address | Student's address                                  |
+| St_Age     | Student's age                                      |
+| Dept_Id    | Department ID                                      |
+| St_super   | Foreign key referencing St_Id of the supervisor    |
+
+## Self Join Queries
+
+### 1. Basic Self Join (ANSI Syntax)
+
+To get the student name and their supervisor's name:
+
+```sql
+SELECT Stds.St_Fname AS StudentName, Supers.St_Fname AS SupervisorName
+FROM Student Stds, Student Supers
+WHERE Supers.St_Id = Stds.St_super
+```
+
+### 2. Inner Join (Microsoft Syntax)
+
+The same query using Microsoft's INNER JOIN syntax:
+
+```sql
+SELECT Stds.St_Fname AS StudentName, Supers.St_Fname AS SupervisorName
+FROM Student Stds INNER JOIN Student Supers
+ON Supers.St_Id = Stds.St_super
+```
+
+### 3. Retrieving All Supervisor Data
+
+To get the student name and all data about their supervisor:
+
+```sql
+SELECT Stds.St_Fname AS StudentName, Supers.*
+FROM Student Stds INNER JOIN Student Supers
+ON Supers.St_Id = Stds.St_super
+```
+
+## Key Points
+
+1. Self joins treat a single table as if it were two separate tables.
+2. The join condition connects the foreign key (St_super) to the primary key (St_Id).
+3. Aliasing (Stds, Supers) helps distinguish between the two "instances" of the table.
+4. INNER JOIN will only return students who have supervisors.
+
+## Considerations
+
+- To include students without supervisors, use a LEFT JOIN instead of INNER JOIN.
+- Ensure proper indexing on the St_super column for performance.
+- Be cautious of circular references (e.g., a student being their own supervisor).
+
+## Advanced Usage
+
+For more complex hierarchies or to query multiple levels of supervision, consider using recursive Common Table Expressions (CTEs) in SQL Server.
